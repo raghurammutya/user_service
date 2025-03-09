@@ -1,0 +1,68 @@
+services:
+  ticker:
+    build:
+      context: ./ticker
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000" # Map external 8001 to internal 8000
+    volumes:
+      - ./ticker/app:/app/app
+  signal:
+    build:
+      context: ./signal
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8000" # Map external 8002 to internal 8000
+    volumes:
+      - ./signal/app:/app/app
+  trade:
+    build:
+      context: ./trade
+      dockerfile: Dockerfile
+    ports:
+      - "8003:8000" # Map external 8003 to internal 8000
+    volumes:
+      - ./trade/app:/app/app
+  strategy:
+    build:
+      context: ./strategy
+      dockerfile: Dockerfile
+    ports:
+      - "8004:8000" # Map external 8004 to internal 8000
+    volumes:
+      - ./strategy/app:/app/app
+  backtest:
+    build:
+      context: ./backtest
+      dockerfile: Dockerfile
+    ports:
+      - "8005:8000" # Map external 8005 to internal 8000
+    volumes:
+      - ./backtest/app:/app/app
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+  postgresdb:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: timescaledb
+    volumes:
+      - timescaledb-data:/var/lib/postgresql/data
+volumes:
+  postgres-data:
+  timescaledb-data:
