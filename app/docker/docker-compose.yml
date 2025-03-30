@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+  user_service:
+    build:
+      context: .
+    environment:
+      - RABBITMQ_URL=amqp://user:pass@rabbitmq-host:5672/
+      - TIMESCALEDB_URL=postgresql://user:pass@db-host:5432/database
+      - REDIS_URL=redis://redis-host:6379/
+      - KEYCLOAK_URL=http://keycloak-host:8080/
+      - KEYCLOAK_REALM=myrealm
+      - KEYCLOAK_CLIENT_ID=user-service
+      - JWT_SECRET_KEY=supersecretkey
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+      - keycloak
+      - timescaledb
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg14
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: database
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+    command: ["start-dev"]
+    ports:
+      - "8080:8080"
