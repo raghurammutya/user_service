@@ -1,0 +1,6 @@
+# Include all Python files in the root directory
+include *.py
+
+include README.md
+include LICENSE
+recursive-include shared_architecture *.py
