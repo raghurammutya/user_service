@@ -1,5 +1,5 @@
-aio-pika==7.2.0        # RabbitMQ integration
-redis==4.5.1           # Redis for OTP and session management
-graphene==3.3.2        # GraphQL support
-celery==5.3.0          # Background task processing
-fastapi-mail==4.0.0    # Email handling for account recovery
+aio-pika==7.2.0
+redis==4.5.1
+graphene==3.3
+celery==5.3.0
+fastapi-mail==4.0.0
