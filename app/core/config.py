@@ -14,3 +14,4 @@ class AppConfig:
     keycloak_client_id = os.getenv("KEYCLOAK_CLIENT_ID", ConfigMap.get("KEYCLOAK_CLIENT_ID"))
     jwt_secret_key = os.getenv("JWT_SECRET_KEY", ConfigMap.get("JWT_SECRET_KEY"))
     jwt_algorithm = os.getenv("JWT_ALGORITHM", "HS256")
+    rabbitmq_url = os.getenv("RABBITMQ_URL", "amqp://user:password@localhost:5672/")

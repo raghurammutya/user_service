@@ -31,3 +31,10 @@ def delete_user(user_id: int, db: Session):
         raise ValueError("User not found")
     db.delete(user)
     db.commit()
+
+def search_users(search_term: str, db: Session):
+    return db.query(User).filter(User.first_name.ilike(f"%{search_term}%")).all()
+
+def delete_user_data(user_id: int, db: Session):
+    # Delete or anonymize all data related to the user
+    pass

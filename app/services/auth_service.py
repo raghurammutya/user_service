@@ -16,3 +16,14 @@ def authenticate_user(username: str, password: str, db: Session):
 def login_user(username: str, password: str, db: Session):
     user = authenticate_user(username, password, db)
     return {"access_token": create_access_token(user.email), "token_type": "bearer"}
+
+def generate_otp():
+    return random.randint(100000, 999999)
+
+def verify_otp(user_id: int, otp: int):
+    # Logic to verify OTP (e.g., via Redis)
+    pass
+async def linkedin_login(access_token: str):
+    url = f"https://api.linkedin.com/v2/me?oauth2_access_token={access_token}"
+    response = requests.get(url)
+    return response.json()

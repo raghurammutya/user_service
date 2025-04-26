@@ -25,3 +25,7 @@ def delete_group(group_id: int, db: Session):
         raise ValueError("Group not found")
     db.delete(group)
     db.commit()
+def send_group_invitation(group_id: int, email: str):
+    link = generate_invite_link(group_id)
+    send_email(email, f"Join the group using this link: {link}")
+

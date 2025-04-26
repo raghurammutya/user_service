@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey,Enum
 from sqlalchemy.orm import relationship
 from app.models.group import Group
 from shared_architecture.db import Base
+from app.models.enums import UserRole
 
 class User(Base):
     __tablename__ = "users"
@@ -12,3 +13,5 @@ class User(Base):
     phone_number = Column(String, unique=True)
     group_id = Column(Integer, ForeignKey("groups.id"))
     group = relationship("Group", back_populates="members")
+    role = Column(Enum(UserRole), default=UserRole.USER)
+    
