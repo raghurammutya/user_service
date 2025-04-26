@@ -25,7 +25,8 @@ jobs:
       - name: Build and Push Docker Image (Prod)
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./docker
+          file: ./docker/Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
           cache-from: type=gha

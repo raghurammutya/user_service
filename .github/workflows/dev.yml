@@ -22,9 +22,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and Push Docker Image (Dev)
+      - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          push: true
-          tags: ghcr.io/${{ github.repository }}:dev
+          context: ./docker
+          file: ./docker/Dockerfile
+          push: false
+          tags: user_service:dev
