@@ -13,8 +13,7 @@ WORKDIR /app
 
 # Copy only installed packages
 COPY --from=builder /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
-
+ENV PATH=$PATH:/root/.local/bin
 # Copy app source code
 COPY . .
 
