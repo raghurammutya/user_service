@@ -38,3 +38,5 @@ The `user_service` is a Python-based microservice built using FastAPI and Rabbit
    ```bash
    uvicorn app.main:app --host 0.0.0.0 --port 8000
    ```
+
+# Dev Trigger Test
