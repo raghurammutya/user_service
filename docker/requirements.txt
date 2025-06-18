@@ -77,3 +77,11 @@ mkdocs-material>=9.4.8
 # Additional utilities
 click>=8.1.7
 rich>=13.7.0
+
+# Enhanced User Service Features
+pyotp>=2.9.0          # TOTP/MFA support
+qrcode[pil]>=7.4.2     # QR code generation for TOTP
+phonenumbers>=8.13.26  # Phone number validation
+geoip2>=4.7.0          # IP geolocation
+user-agents>=2.2.0     # User agent parsing
+pillow>=10.1.0         # Image processing for QR codes
