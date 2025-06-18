@@ -4,6 +4,7 @@ from sqlalchemy.dialects.postgresql import JSONB, INET
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from shared_architecture.db.base import Base
+from shared_architecture.db.models.organization import Organization
 from enum import Enum
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -221,48 +222,7 @@ class UserPreferences(Base):
     # Relationships
     user = relationship("User", back_populates="preferences")
 
-# Organizations and Multi-tenancy
-class Organization(Base):
-    """Multi-tenant organization management"""
-    __tablename__ = "organizations"
-    __table_args__ = {'schema': 'tradingdb', 'extend_existing': True}
-    
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), nullable=False)
-    display_name = Column(String(255))
-    description = Column(Text)
-    
-    # Organization details
-    organization_type = Column(String(50))  # trading_firm, hedge_fund, bank, individual
-    registration_number = Column(String(100))
-    tax_id = Column(String(50))
-    website = Column(String(255))
-    
-    # Subscription and billing
-    subscription_tier = Column(String(50), default=SubscriptionTier.BASIC.value)
-    billing_email = Column(String(255))
-    subscription_starts = Column(Date)
-    subscription_expires = Column(Date)
-    
-    # Configuration
-    settings = Column(JSONB, default=dict)  # Org-specific configurations
-    compliance_requirements = Column(JSONB, default=dict)
-    risk_settings = Column(JSONB, default=dict)
-    feature_flags = Column(JSONB, default=dict)
-    
-    # Address and contact
-    address = Column(JSONB)  # Street, city, country, postal_code
-    contact_info = Column(JSONB)  # Phone, fax, support_email
-    
-    # Status and lifecycle
-    is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
-    created_by = Column(Integer, ForeignKey("tradingdb.users.id"))
-    
-    # Relationships
-    creator = relationship("User", foreign_keys=[created_by])
-    members = relationship("UserOrganizationRole", back_populates="organization")
+# Organizations and Multi-tenancy - Using shared_architecture Organization model
 
 class UserOrganizationRole(Base):
     """User roles within organizations"""
