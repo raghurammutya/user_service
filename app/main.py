@@ -16,7 +16,7 @@ from shared_architecture.auth import init_jwt_manager
 from shared_architecture.utils.keycloak_helper import init_keycloak_manager
 
 # Imports for your specific microservice components
-from app.api.endpoints import users, auth, groups  # Your API routes
+from app.api.endpoints import users, auth, groups, permissions  # Your API routes
 from app.routers import trading_limits  # Trading limits API
 from app.context.global_app import set_app  # For global app state
 from app.core.config import settings as userServiceSettings  # Your custom settings class
@@ -50,6 +50,7 @@ app.include_router(users.router, prefix="/users", tags=["users"])
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(groups.router, prefix="/groups", tags=["groups"])
 app.include_router(trading_limits.router, tags=["trading-limits"])
+app.include_router(permissions.router, prefix="/api/permissions", tags=["permissions"])
 
 
 @app.on_event("startup")
