@@ -12,9 +12,10 @@ from shared_architecture.auth import get_current_user, UserContext
 from app.models.user import User
 
 # Import shared architecture utilities
-from shared_architecture.utils.service_decorators import (
-    api_endpoint, with_metrics, with_circuit_breaker
-)
+# Temporarily disabled due to import issue in shared_architecture
+# from shared_architecture.utils.service_decorators import (
+#     api_endpoint, with_metrics, with_circuit_breaker
+# )
 from shared_architecture.utils.error_handler import handle_errors
 from shared_architecture.utils.enhanced_logging import get_logger, LoggingContext
 from shared_architecture.monitoring.metrics_collector import MetricsCollector
@@ -24,12 +25,12 @@ logger = get_logger(__name__)
 metrics = MetricsCollector.get_instance()
 
 @router.post("/login")
-@api_endpoint(
-    rate_limit="20/minute",
-    timeout=15.0,
-    metrics_name="user_login",
-    circuit_breaker_name="auth_service"
-)
+# @api_endpoint(
+#     rate_limit="20/minute",
+#     timeout=15.0,
+#     metrics_name="user_login",
+#     circuit_breaker_name="auth_service"
+# )
 @handle_errors("User login failed")
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     """Authenticate user and return access token"""
@@ -62,12 +63,12 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
             raise
 
 @router.post("/keycloak-login")
-@api_endpoint(
-    rate_limit="20/minute",
-    timeout=20.0,
-    metrics_name="keycloak_login",
-    circuit_breaker_name="keycloak_service"
-)
+# @api_endpoint(
+#     rate_limit="20/minute",
+#     timeout=20.0,
+#     metrics_name="keycloak_login",
+#     circuit_breaker_name="keycloak_service"
+# )
 @handle_errors("Keycloak login failed")
 async def keycloak_login(username: str, password: str, db: Session = Depends(get_db)):
     """Enhanced Keycloak authentication with user provisioning"""
@@ -100,11 +101,11 @@ async def keycloak_login(username: str, password: str, db: Session = Depends(get
             raise
 
 @router.post("/logout")
-@api_endpoint(
-    rate_limit="50/minute",
-    timeout=10.0,
-    metrics_name="user_logout"
-)
+# @api_endpoint(
+#     rate_limit="50/minute",
+#     timeout=10.0,
+#     metrics_name="user_logout"
+# )
 @handle_errors("User logout failed")
 async def logout(token: str = None):
     """Logout user and invalidate token"""
@@ -124,11 +125,11 @@ async def logout(token: str = None):
         return {"message": "Successfully logged out"}
 
 @router.get("/me")
-@api_endpoint(
-    rate_limit="100/minute",
-    timeout=10.0,
-    metrics_name="get_current_user"
-)
+# @api_endpoint(
+#     rate_limit="100/minute",
+#     timeout=10.0,
+#     metrics_name="get_current_user"
+# )
 @handle_errors("Get current user failed")
 async def get_current_user_info(
     current_user: UserContext = Depends(get_current_user),

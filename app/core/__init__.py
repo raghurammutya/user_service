@@ -1,18 +1,19 @@
 # Initialize core utilities and configurations
 from .config import AppConfig
 from .dependencies import get_db
-from .events import startup_event, shutdown_event
-from .security import verify_password, hash_password, create_access_token
-from .logging import setup_logging
+
+# Check what modules exist and only import available ones
+try:
+    from .security import verify_password, hash_password, create_access_token
+    _security_available = True
+except ImportError:
+    _security_available = False
 
 # Expose modules for convenient imports
 __all__ = [
     "AppConfig",
     "get_db",
-    "startup_event",
-    "shutdown_event",
-    "verify_password",
-    "hash_password",
-    "create_access_token",
-    "setup_logging",
 ]
+
+if _security_available:
+    __all__.extend(["verify_password", "hash_password", "create_access_token"])

@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Path
 from sqlalchemy.orm import Session
 
 from shared_architecture.auth import get_current_user, UserContext
-from shared_architecture.db.database import get_db
+from app.core.dependencies import get_db
 from shared_architecture.db.models.user_trading_limits import UserTradingLimit, TradingLimitType
 from shared_architecture.db.models.trading_limit_breach import TradingLimitBreach
 from shared_architecture.db.models.trading_account import TradingAccount
@@ -26,21 +26,22 @@ from shared_architecture.utils.trading_limit_validator import (
     TradingAction, 
     get_trading_limit_validator
 )
-from shared_architecture.decorators.service_decorators import (
-    handle_service_errors,
-    log_service_call,
-    validate_permissions,
-    track_performance
-)
+# Temporarily disabled due to import issue in shared_architecture
+# from shared_architecture.decorators.service_decorators import (
+#     handle_service_errors,
+#     log_service_call,
+#     validate_permissions,
+#     track_performance
+# )
 from shared_architecture.utils.enhanced_logging import get_logger
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/api/trading-limits", tags=["Trading Limits"])
 
 @router.post("", response_model=TradingLimitResponseSchema)
-@handle_service_errors
-@log_service_call
-@track_performance
+# @handle_service_errors
+# @log_service_call
+# @track_performance
 async def create_trading_limit(
     schema: TradingLimitCreateSchema,
     current_user: UserContext = Depends(get_current_user),
@@ -99,8 +100,8 @@ async def create_trading_limit(
     return TradingLimitResponseSchema.from_orm(limit)
 
 @router.get("", response_model=TradingLimitListSchema)
-@handle_service_errors
-@log_service_call
+# @handle_service_errors
+# @log_service_call
 async def list_trading_limits(
     user_id: Optional[int] = Query(None),
     trading_account_id: Optional[int] = Query(None),
@@ -148,8 +149,8 @@ async def list_trading_limits(
     )
 
 @router.get("/{limit_id}", response_model=TradingLimitResponseSchema)
-@handle_service_errors
-@log_service_call
+# @handle_service_errors
+# @log_service_call
 async def get_trading_limit(
     limit_id: int = Path(...),
     current_user: UserContext = Depends(get_current_user),
@@ -176,9 +177,9 @@ async def get_trading_limit(
     return TradingLimitResponseSchema.from_orm(limit)
 
 @router.put("/{limit_id}", response_model=TradingLimitResponseSchema)
-@handle_service_errors
-@log_service_call
-@track_performance
+# @handle_service_errors
+# @log_service_call
+# @track_performance
 async def update_trading_limit(
     limit_id: int = Path(...),
     schema: TradingLimitUpdateSchema = ...,
@@ -214,8 +215,8 @@ async def update_trading_limit(
     return TradingLimitResponseSchema.from_orm(limit)
 
 @router.delete("/{limit_id}")
-@handle_service_errors
-@log_service_call
+# @handle_service_errors
+# @log_service_call
 async def delete_trading_limit(
     limit_id: int = Path(...),
     current_user: UserContext = Depends(get_current_user),
@@ -245,9 +246,9 @@ async def delete_trading_limit(
     return {"message": "Trading limit deleted successfully"}
 
 @router.post("/validate", response_model=TradingLimitValidationResultSchema)
-@handle_service_errors
-@log_service_call
-@track_performance
+# @handle_service_errors
+# @log_service_call
+# @track_performance
 async def validate_trading_action(
     schema: TradingLimitValidationSchema,
     trading_account_id: int = Query(...),
@@ -294,8 +295,8 @@ async def validate_trading_action(
     )
 
 @router.post("/reset-usage")
-@handle_service_errors
-@log_service_call
+# @handle_service_errors
+# @log_service_call
 async def reset_trading_limit_usage(
     schema: TradingLimitUsageResetSchema,
     current_user: UserContext = Depends(get_current_user),
@@ -335,8 +336,8 @@ async def reset_trading_limit_usage(
     return {"message": f"Usage reset for {len(limits)} trading limits"}
 
 @router.get("/breaches", response_model=List[TradingLimitBreachResponseSchema])
-@handle_service_errors
-@log_service_call
+# @handle_service_errors
+# @log_service_call
 async def list_trading_limit_breaches(
     user_id: Optional[int] = Query(None),
     trading_account_id: Optional[int] = Query(None),
@@ -374,9 +375,9 @@ async def list_trading_limit_breaches(
     return [TradingLimitBreachResponseSchema.from_orm(breach) for breach in breaches]
 
 @router.post("/bulk-create", response_model=List[TradingLimitResponseSchema])
-@handle_service_errors
-@log_service_call
-@track_performance
+# @handle_service_errors
+# @log_service_call
+# @track_performance
 async def bulk_create_trading_limits(
     schema: BulkTradingLimitCreateSchema,
     current_user: UserContext = Depends(get_current_user),

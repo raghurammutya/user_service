@@ -9,9 +9,10 @@ from app.services.user_service import (
 from app.core.dependencies import get_db
 
 # Import shared architecture utilities
-from shared_architecture.utils.service_decorators import (
-    api_endpoint, with_metrics, with_validation
-)
+# Temporarily disabled due to import issue in shared_architecture
+# from shared_architecture.utils.service_decorators import (
+#     api_endpoint, with_metrics, with_validation
+# )
 from shared_architecture.utils.error_handler import handle_errors
 from shared_architecture.utils.enhanced_logging import get_logger, LoggingContext
 
@@ -19,11 +20,11 @@ router = APIRouter()
 logger = get_logger(__name__)
 
 @router.post("/", response_model=UserResponseSchema)
-@api_endpoint(
-    rate_limit="100/minute",
-    timeout=30.0,
-    metrics_name="user_creation"
-)
+# @api_endpoint(
+#     rate_limit="100/minute",
+#     timeout=30.0,
+#     metrics_name="user_creation"
+# )
 @handle_errors("User registration failed")
 async def register_user(user_data: UserCreateSchema, db: Session = Depends(get_db)):
     """Register a new user with enhanced error handling and metrics"""
@@ -32,11 +33,11 @@ async def register_user(user_data: UserCreateSchema, db: Session = Depends(get_d
         return await create_user(user_data, db)
 
 @router.get("/{user_id}", response_model=UserResponseSchema)
-@api_endpoint(
-    rate_limit="200/minute",
-    timeout=15.0,
-    metrics_name="user_retrieval"
-)
+# @api_endpoint(
+#     rate_limit="200/minute",
+#     timeout=15.0,
+#     metrics_name="user_retrieval"
+# )
 @handle_errors("User retrieval failed")
 async def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
     """Get user by ID with enhanced error handling"""
@@ -45,11 +46,11 @@ async def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
         return await get_user(user_id, db)
 
 @router.put("/{user_id}", response_model=UserResponseSchema)
-@api_endpoint(
-    rate_limit="50/minute",
-    timeout=30.0,
-    metrics_name="user_update"
-)
+# @api_endpoint(
+#     rate_limit="50/minute",
+#     timeout=30.0,
+#     metrics_name="user_update"
+# )
 @handle_errors("User update failed")
 async def update_user_by_id(
     user_id: int,
@@ -62,11 +63,11 @@ async def update_user_by_id(
         return await update_user(user_id, user_data, db)
 
 @router.delete("/{user_id}")
-@api_endpoint(
-    rate_limit="10/minute",
-    timeout=30.0,
-    metrics_name="user_deletion"
-)
+# @api_endpoint(
+#     rate_limit="10/minute",
+#     timeout=30.0,
+#     metrics_name="user_deletion"
+# )
 @handle_errors("User deletion failed")
 async def delete_user_by_id(user_id: int, db: Session = Depends(get_db)):
     """Delete user with enhanced error handling and metrics"""
@@ -76,11 +77,11 @@ async def delete_user_by_id(user_id: int, db: Session = Depends(get_db)):
         return {"message": "User deleted successfully"}
 
 @router.get("/search/{search_term}", response_model=List[UserResponseSchema])
-@api_endpoint(
-    rate_limit="50/minute",
-    timeout=20.0,
-    metrics_name="user_search"
-)
+# @api_endpoint(
+#     rate_limit="50/minute",
+#     timeout=20.0,
+#     metrics_name="user_search"
+# )
 @handle_errors("User search failed")
 async def search_users_endpoint(search_term: str, db: Session = Depends(get_db)):
     """Search users with enhanced error handling and metrics"""

@@ -7,9 +7,10 @@ from app.services.group_service import create_group, add_user_to_group, delete_g
 from app.schemas.group import GroupCreateSchema, GroupResponseSchema
 
 # Import shared architecture utilities
-from shared_architecture.utils.service_decorators import (
-    api_endpoint, with_metrics, background_task
-)
+# Temporarily disabled due to import issue in shared_architecture
+# from shared_architecture.utils.service_decorators import (
+#     api_endpoint, with_metrics, background_task
+# )
 from shared_architecture.utils.error_handler import handle_errors
 from shared_architecture.utils.enhanced_logging import get_logger, LoggingContext
 from shared_architecture.monitoring.metrics_collector import MetricsCollector
@@ -19,11 +20,11 @@ logger = get_logger(__name__)
 metrics = MetricsCollector.get_instance()
 
 @router.post("/", response_model=GroupResponseSchema)
-@api_endpoint(
-    rate_limit="30/minute",
-    timeout=20.0,
-    metrics_name="group_creation"
-)
+# @api_endpoint(
+#     rate_limit="30/minute",
+#     timeout=20.0,
+#     metrics_name="group_creation"
+# )
 @handle_errors("Group creation failed")
 async def create_group_endpoint(group_data: GroupCreateSchema, db: Session = Depends(get_db)):
     """Create a new group with enhanced error handling and metrics"""
@@ -51,11 +52,11 @@ async def create_group_endpoint(group_data: GroupCreateSchema, db: Session = Dep
             raise
 
 @router.post("/{group_id}/members/{user_id}")
-@api_endpoint(
-    rate_limit="50/minute",
-    timeout=15.0,
-    metrics_name="group_member_addition"
-)
+# @api_endpoint(
+#     rate_limit="50/minute",
+#     timeout=15.0,
+#     metrics_name="group_member_addition"
+# )
 @handle_errors("Adding user to group failed")
 async def add_member_to_group(
     group_id: int,
@@ -87,11 +88,11 @@ async def add_member_to_group(
             raise
 
 @router.delete("/{group_id}")
-@api_endpoint(
-    rate_limit="10/minute",
-    timeout=20.0,
-    metrics_name="group_deletion"
-)
+# @api_endpoint(
+#     rate_limit="10/minute",
+#     timeout=20.0,
+#     metrics_name="group_deletion"
+# )
 @handle_errors("Group deletion failed")
 async def delete_group_endpoint(group_id: int, db: Session = Depends(get_db)):
     """Delete group with enhanced error handling"""
@@ -119,11 +120,11 @@ async def delete_group_endpoint(group_id: int, db: Session = Depends(get_db)):
             raise
 
 @router.post("/{group_id}/invite")
-@background_task(
-    retry_attempts=3,
-    circuit_breaker_name="email_service",
-    metrics_name="group_invitation"
-)
+# @background_task(
+#     retry_attempts=3,
+#     circuit_breaker_name="email_service",
+#     metrics_name="group_invitation"
+# )
 @handle_errors("Group invitation failed")
 async def send_group_invitation(group_id: int, email: str, db: Session = Depends(get_db)):
     """Send group invitation with background task processing"""

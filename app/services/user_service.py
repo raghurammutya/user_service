@@ -13,13 +13,14 @@ from shared_architecture.exceptions.trade_exceptions import (
     ValidationException, DatabaseException
 )
 from shared_architecture.utils.enhanced_logging import get_logger, LoggingContext
-from shared_architecture.utils.service_decorators import with_metrics, with_retry
+# Temporarily disabled due to import issue in shared_architecture
+# from shared_architecture.utils.service_decorators import with_metrics, with_retry
 from shared_architecture.resilience.retry_policies import retry_with_exponential_backoff
 
 logger = get_logger(__name__)
 
 @handle_errors("User creation failed")
-@with_metrics("user_service_operations", tags={"operation": "create"})
+# @with_metrics("user_service_operations", tags={"operation": "create"})
 @retry_with_exponential_backoff(max_attempts=3)
 async def create_user(user_data: UserCreateSchema, db: Session) -> User:
     """Create a new user with enhanced error handling and validation"""
@@ -66,7 +67,7 @@ async def create_user(user_data: UserCreateSchema, db: Session) -> User:
         )
 
 @handle_errors("User retrieval failed")
-@with_metrics("user_service_operations", tags={"operation": "get"})
+# @with_metrics("user_service_operations", tags={"operation": "get"})
 async def get_user(user_id: int, db: Session) -> User:
     """Get user by ID with enhanced error handling"""
     
@@ -98,7 +99,7 @@ async def get_user(user_id: int, db: Session) -> User:
         )
 
 @handle_errors("User update failed")
-@with_metrics("user_service_operations", tags={"operation": "update"})
+# @with_metrics("user_service_operations", tags={"operation": "update"})
 @retry_with_exponential_backoff(max_attempts=3)
 async def update_user(user_id: int, user_data: UserUpdateSchema, db: Session) -> User:
     """Update user with enhanced error handling and validation"""
@@ -157,7 +158,7 @@ async def update_user(user_id: int, user_data: UserUpdateSchema, db: Session) ->
         )
 
 @handle_errors("User deletion failed")
-@with_metrics("user_service_operations", tags={"operation": "delete"})
+# @with_metrics("user_service_operations", tags={"operation": "delete"})
 @retry_with_exponential_backoff(max_attempts=3)
 async def delete_user(user_id: int, db: Session) -> None:
     """Delete user with enhanced error handling"""
@@ -194,7 +195,7 @@ async def delete_user(user_id: int, db: Session) -> None:
         )
 
 @handle_errors("User search failed")
-@with_metrics("user_service_operations", tags={"operation": "search"})
+# @with_metrics("user_service_operations", tags={"operation": "search"})
 async def search_users(search_term: str, db: Session) -> List[User]:
     """Search users with enhanced error handling and validation"""
     
@@ -232,7 +233,7 @@ async def search_users(search_term: str, db: Session) -> List[User]:
         )
 
 @handle_errors("User data deletion failed")
-@with_metrics("user_service_operations", tags={"operation": "data_deletion"})
+# @with_metrics("user_service_operations", tags={"operation": "data_deletion"})
 async def delete_user_data(user_id: int, db: Session) -> None:
     """Delete or anonymize all data related to the user (GDPR compliance)"""
     

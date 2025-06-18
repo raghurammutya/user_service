@@ -8,7 +8,8 @@ from typing import Dict, Any, Optional
 from datetime import datetime, timedelta
 from shared_architecture.monitoring.metrics_collector import MetricsCollector, MetricType
 from shared_architecture.utils.enhanced_logging import get_logger
-from shared_architecture.utils.service_decorators import with_metrics
+# Temporarily disabled due to import issue in shared_architecture
+# from shared_architecture.utils.service_decorators import with_metrics
 
 logger = get_logger(__name__)
 
@@ -137,9 +138,9 @@ class UserServiceMetrics:
     def track_group_operation(self, operation: str, success: bool):
         """Track group operations"""
         if operation == "create":
-            self.group_creations.increment(tags={\"success\": str(success)})
+            self.group_creations.increment(tags={"success": str(success)})
         elif operation == "add_member":
-            self.group_member_additions.increment(tags={\"success\": str(success)})
+            self.group_member_additions.increment(tags={"success": str(success)})
         
         logger.info("Group operation tracked", operation=operation, success=success)
     
@@ -210,7 +211,7 @@ user_metrics = UserServiceMetrics()
 def track_user_operation(operation_name: str):
     """Decorator to automatically track user operation metrics"""
     def decorator(func):
-        @with_metrics(f"user_service_{operation_name}")
+        # @with_metrics(f"user_service_{operation_name}")
         async def wrapper(*args, **kwargs):
             start_time = datetime.utcnow()
             
