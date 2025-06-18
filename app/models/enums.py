@@ -1,12 +1,6 @@
-from enum import Enum
+# Use shared architecture enums
+from shared_architecture.enums import UserRole, AccountStatus
 
-class UserRole(Enum):
-    ADMIN = "admin"
-    USER = "user"
-    GUEST = "guest"
-
-class AccountStatus(Enum):
-    ACTIVE = "active"
-    INACTIVE = "inactive"
-    SUSPENDED = "suspended"
+# Re-export for backward compatibility
+__all__ = ["UserRole", "AccountStatus"]
 

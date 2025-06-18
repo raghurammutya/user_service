@@ -1,24 +1,21 @@
-# 1️⃣ Build stage
-FROM python:3.10-slim AS builder
+FROM ghcr.io/raghurammutya/base-image:latest
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install --user --no-cache-dir -r requirements.txt
+# Copy requirements first to leverage Docker cache
+COPY user_service/docker/requirements.txt /app/requirements.txt
 
-# 2️⃣ Production stage
-FROM python:3.10-slim
+# Install Python dependencies
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-WORKDIR /app
+# Copy application code
+COPY user_service/app /app/app
 
-# Copy only installed packages
-COPY --from=builder /root/.local /root/.local
-ENV PATH=$PATH:/root/.local/bin
-# Copy app source code
-COPY . .
+# Set Python path
+ENV PYTHONPATH=/app
 
-# Expose port
-EXPOSE 8000
+# Copy and set up entrypoint
+COPY user_service/docker/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-# Start server
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+ENTRYPOINT ["/app/entrypoint.sh"]

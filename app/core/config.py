@@ -1,17 +1,51 @@
 import os
-from shared_architecture.models.config_map import ConfigMap
+from shared_architecture.config.config_loader import config_loader
 
 class AppConfig:
     """
-    Reads configuration parameters from the environment or ConfigMap.
-    ConfigMap is used for production, while `.env` is used for local development/testing.
+    Reads configuration parameters from the shared architecture config system.
+    Uses the new hierarchical configuration: environment variables -> service config -> shared config -> common config
     """
-    rabbitmq_url = os.getenv("RABBITMQ_URL", ConfigMap.get("RABBITMQ_URL"))
-    db_url = os.getenv("TIMESCALEDB_URL", ConfigMap.get("TIMESCALEDB_URL"))
-    redis_url = os.getenv("REDIS_URL", ConfigMap.get("REDIS_URL"))
-    keycloak_url = os.getenv("KEYCLOAK_URL", ConfigMap.get("KEYCLOAK_URL"))
-    keycloak_realm = os.getenv("KEYCLOAK_REALM", ConfigMap.get("KEYCLOAK_REALM"))
-    keycloak_client_id = os.getenv("KEYCLOAK_CLIENT_ID", ConfigMap.get("KEYCLOAK_CLIENT_ID"))
-    jwt_secret_key = os.getenv("JWT_SECRET_KEY", ConfigMap.get("JWT_SECRET_KEY"))
-    jwt_algorithm = os.getenv("JWT_ALGORITHM", "HS256")
-    rabbitmq_url = os.getenv("RABBITMQ_URL", "amqp://user:password@localhost:5672/")
+    
+    @property
+    def rabbitmq_url(self) -> str:
+        return config_loader.get("RABBITMQ_URL", "amqp://guest:guest@rabbitmq:5672/", scope="all")
+    
+    @property
+    def db_url(self) -> str:
+        return config_loader.get("TIMESCALEDB_URL", "postgresql://tradmin:tradpass@timescaledb:5432/tradingdb", scope="all")
+    
+    @property
+    def redis_url(self) -> str:
+        return config_loader.get("REDIS_URL", "redis://redis:6379/0", scope="all")
+    
+    @property
+    def keycloak_url(self) -> str:
+        return config_loader.get("KEYCLOAK_URL", "http://keycloak:8080", scope="all")
+    
+    @property
+    def keycloak_realm(self) -> str:
+        return config_loader.get("KEYCLOAK_REALM", "stocksblitz", scope="all")
+    
+    @property
+    def keycloak_client_id(self) -> str:
+        return config_loader.get("KEYCLOAK_CLIENT_ID", "user-service", scope="all")
+    
+    @property
+    def jwt_secret_key(self) -> str:
+        return config_loader.get("JWT_SECRET_KEY", "your-secret-key-change-in-production", scope="all")
+    
+    @property
+    def jwt_algorithm(self) -> str:
+        return config_loader.get("JWT_ALGORITHM", "HS256", scope="all")
+    
+    @property
+    def uvicorn_port(self) -> int:
+        return int(config_loader.get("UVICORN_PORT", "8002", scope="all"))
+    
+    @property
+    def debug_mode(self) -> bool:
+        return config_loader.get("DEBUG_MODE", "false", scope="all").lower() == "true"
+
+# Global settings instance
+settings = AppConfig()

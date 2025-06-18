@@ -1,17 +1,15 @@
-from sqlalchemy import Column, Integer, String, ForeignKey,Enum
-from sqlalchemy.orm import relationship
-from app.models.group import Group
-from shared_architecture.db import Base
-from app.models.enums import UserRole
+# Use shared architecture User model and extend if needed
+from shared_architecture.db.models.user import User as SharedUser
+from sqlalchemy import Column, String
+from shared_architecture.enums import UserRole
 
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True)
-    first_name = Column(String)
-    last_name = Column(String)
-    email = Column(String, unique=True)
-    phone_number = Column(String, unique=True)
-    group_id = Column(Integer, ForeignKey("groups.id"))
-    group = relationship("Group", back_populates="members")
-    role = Column(Enum(UserRole), default=UserRole.USER)
+# For now, use the shared User model directly
+# If you need user_service specific fields, you can extend like this:
+# class UserExtended(SharedUser):
+#     __tablename__ = "users_extended" 
+#     phone_number = Column(String, unique=True)
+#     # Add other user_service specific fields
+
+# Use the shared User model
+User = SharedUser
     

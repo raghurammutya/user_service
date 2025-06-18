@@ -1,9 +1,5 @@
-from sqlalchemy import Column, Integer, String, DateTime
-from shared_architecture.db import Base
+# Use shared architecture ActivityLog model
+from shared_architecture.db.models.activity_log import ActivityLog as SharedActivityLog
 
-class ActivityLog(Base):
-    __tablename__ = "activity_logs"
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer)
-    action = Column(String)
-    timestamp = Column(DateTime)
+# Use the shared ActivityLog model
+ActivityLog = SharedActivityLog
